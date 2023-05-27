@@ -1,0 +1,17 @@
+- task: Ansible@0
+  displayName: Install Agent Azure
+  inputs:
+    ansibleInterface: 'agentMachine'
+    playbookPathOnAgentMachine: '$(Build.SourcesDirectory)/Provisioning-Platform-Machines/install-azure-agent-windows-server.yml'
+    inventoriesAgentMachine: 'inlineContent'
+    inventoryInlineContentAgentMachine: |
+      [all]
+      ${{ parameters.TargetMachine }}
+      [all:vars]
+      ansible_user=$(ansible_user)
+      ansible_password=$(ansible_password)
+      ansible_connection=$(ansible_connection)
+      ansible_winrm_transport=ntlm
+      ansible_winrm_server_cert_validation=ignore
+      ansible_port=5985
+    args: --vault-id token@$(Build.SourcesDirectory)/Provisioning-Platform-Machines/roles/install-azure-agent-windows-server/pass --extra-vars '{"agent_wf":"${{ parameters.AgentWorkDirectory }}","pool_name":"${{ parameters.AgentPool }}","agent_name":"${{ parameters.AgentName }}","dest_path":"${{ parameters.Destinationpath }}"}'
