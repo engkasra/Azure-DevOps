@@ -1,12 +1,23 @@
-My main Pipeline is in Project A with two stages:
-
-```bash
 trigger:
 - none
 
 pool:
   vmImage: ubuntu-latest
+  demands: 
+  - Agent.Name -equals LNXINTA2
+parameters:
+  - name: TargetMachine
+    displayName: TargetMachine
+    type: string
+    default:
 
+  - name: Nodejs
+    displayName: Which Version Nodejs Install?
+    type: string
+    default: '2'
+    values:
+      - '1'
+      - '2'
 stages:
 
     - stage: A
@@ -43,4 +54,3 @@ stages:
       - job: 
         steps:
         - bash: echo "B"
- ```
